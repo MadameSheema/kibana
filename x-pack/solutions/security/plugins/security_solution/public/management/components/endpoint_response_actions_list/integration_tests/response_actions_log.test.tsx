@@ -1976,4 +1976,24 @@ describe('Response actions history', () => {
       expect(clearAllButton.hasAttribute('disabled')).toBeTruthy();
     });
   });
+
+  describe('Rule-triggered actions', () => {
+    it('should link "Triggered by rule" to the rule details page', async () => {
+      const data = await getActionListMock({ actionCount: 1 });
+      data.data[0].createdBy = 'unknown';
+      data.data[0].ruleId = 'rule-123';
+
+      useGetEndpointActionListMock.mockReturnValue({
+        ...getBaseMockedActionList(),
+        data,
+      });
+
+      render();
+
+      expect(renderResult.getByTestId('ruleName')).toHaveAttribute(
+        'href',
+        expect.stringContaining('/id/rule-123')
+      );
+    });
+  });
 });
